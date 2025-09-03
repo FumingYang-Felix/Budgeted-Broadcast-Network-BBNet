@@ -183,4 +183,11 @@ If something still blocks you, please open an issue with the notebook name, the 
 
 ---
 
-**Happy experimenting!** BBNet’s notebooks are designed to be self‑contained: setup cells install what’s needed, ASR/CD fetch their own data, and CV only needs the one **`Facial_Recognition.zip`** release asset.
+## Contact
+
+Questions, issues, or ideas for improvements are very welcome:
+
+📧 fumingyang@fas.harvard.edu
+
+Contributions (bug reports, PRs) are appreciated — please open an issue or pull request on GitHub with a clear description and reproduction steps.
+_Last updated: 2025-09-03_
