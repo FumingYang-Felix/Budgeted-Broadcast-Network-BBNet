@@ -1,1 +1,1 @@
-# Budgeted-Broadcast-BB-Network
+# Budgeted-Broadcast-Network-BBNet
