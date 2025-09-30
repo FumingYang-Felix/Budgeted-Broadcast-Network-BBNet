@@ -1,5 +1,16 @@
 # BBNet – Notebook Guides (ASR • CV • Change Detection)
 
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=xhxaWfZQG6c">
+    <img src="homepage2.png" alt="SuperChain demo" width="900">
+  </a>
+  <br/>
+  <a href="https://www.youtube.com/watch?v=xhxaWfZQG6c">
+    <img src="https://img.shields.io/badge/YouTube-Watch-red?logo=youtube" alt="Watch on YouTube">
+  </a>
+</p>
+
+
 This README walks you through **three end‑to‑end notebooks** that demonstrate Budgeted Broadcast (BB) in different domains:
 
 - **ASR** — `ASR_BBN(SP)_RigL_Dense_Magnitude_TopK.ipynb`
