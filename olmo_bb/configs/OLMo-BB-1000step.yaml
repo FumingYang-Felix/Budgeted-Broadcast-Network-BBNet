@@ -1,0 +1,151 @@
+# OLMo Mid-Training Configuration with BB Pruning
+# 1000 Steps Test Run for Multi-Node Validation
+# Reference: https://arxiv.org/pdf/2510.01263
+
+run_name: olmo-bb-midtrain-test
+seed: 42
+dry_run: false
+
+# ============================================================================
+# Model Configuration
+# ============================================================================
+model:
+  # Use OLMo-1B or OLMo-7B depending on your resources
+  # For testing, OLMo-1B is recommended
+  d_model: 2048
+  n_heads: 16
+  n_layers: 16
+  mlp_ratio: 8  # d_ff = d_model * mlp_ratio / 2 for SwiGLU
+  
+  # Attention
+  clip_qkv: null
+  alibi: false
+  rope: true
+  rope_theta: 500000
+  
+  # Activation
+  activation_type: swiglu
+  
+  # Normalization
+  layer_norm_type: rms
+  layer_norm_eps: 1.0e-6
+  
+  # Vocab
+  vocab_size: 100278
+  embedding_size: 100352
+  eos_token_id: 100257
+  pad_token_id: 100277
+  
+  # Initialization
+  init_device: meta
+  init_std: 0.02
+  
+  # Flash attention
+  flash_attention: true
+
+# ============================================================================
+# BB (Budgeted Broadcast) Configuration
+# ============================================================================
+# These are set via environment variables in the SLURM script
+# BB_ENABLE=1
+# BB_REFRESH_INTERVAL=50
+# BB_K_MIN=64
+# BB_K_MAX=-1
+# BB_EMA_BETA=0.99
+# BB_D0=1.0
+# BB_RESCALE=1
+
+# ============================================================================
+# Optimizer
+# ============================================================================
+optimizer:
+  name: adamw
+  learning_rate: 3.0e-5  # Lower LR for mid-training
+  weight_decay: 0.1
+  betas: [0.9, 0.95]
+  eps: 1.0e-8
+  
+  # Gradient clipping
+  max_grad_norm: 1.0
+  max_grad_norm_ratio: null
+
+# ============================================================================
+# Scheduler
+# ============================================================================
+scheduler:
+  name: linear_with_warmup
+  t_warmup: 100  # 100 warmup steps
+  alpha_f: 0.1   # Final LR = 10% of initial
+
+# ============================================================================
+# Training
+# ============================================================================
+# 1000 steps for testing multi-node setup
+max_duration: 1000  # steps
+global_train_batch_size: 512  # Adjust based on your GPU memory
+device_train_microbatch_size: 4
+
+# Precision
+precision: amp_bf16
+
+# Checkpointing
+save_interval: 500
+save_num_checkpoints_to_keep: 2
+save_folder: checkpoints/olmo-bb-test
+
+# Logging
+console_log_interval: 10
+wandb:
+  project: olmo-bb-midtrain
+  name: ${run_name}
+  log_interval: 10
+
+# ============================================================================
+# Data (Mid-Training)
+# ============================================================================
+# Use OLMo's mid-training data mix
+# Adjust paths for your cluster
+data:
+  paths:
+    # Example paths - replace with your actual data paths
+    - /path/to/dolma/v1_7-sample.npy
+  pad_direction: right
+  num_workers: 4
+  drop_last: true
+  pin_memory: true
+  prefetch_factor: 16
+  persistent_workers: true
+  timeout: 0
+
+# Tokenizer
+tokenizer:
+  identifier: allenai/gpt-neox-olmo-dolma-v1_5
+  truncate_direction: right
+
+# ============================================================================
+# Distributed Training
+# ============================================================================
+# FSDP Configuration
+fsdp:
+  wrapping_strategy: by_block
+  precision: mixed
+  sharding_strategy: FULL_SHARD
+
+# Activation checkpointing
+activation_checkpointing: whole_layer
+
+# ============================================================================
+# Evaluation (Optional)
+# ============================================================================
+# Disable for quick testing
+evaluators: []
+
+# ============================================================================
+# Speed Optimizations
+# ============================================================================
+speed_monitor:
+  window_size: 20
+  gpu_flops_available: 312e12  # H100 FP16 FLOPS
+
+compile: null  # Set to "default" to enable torch.compile
+
