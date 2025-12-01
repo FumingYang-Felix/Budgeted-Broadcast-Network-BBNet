@@ -1,7 +1,9 @@
 #!/bin/bash
 #===============================================================================
 # OLMo BB Pruning - 8 GPU (2 nodes × 4 GPUs) - LARGE SCALE
-# 4096 × 1024 × 500 = 2.1B tokens
+# batch=512 (total), seq=4096, 500 steps
+# Tokens per step: 512 × 4096 = 2.1M
+# Total tokens: 2.1M × 500 = ~1B tokens
 # BB_ENABLE=1 (with periodic pruning)
 #===============================================================================
 
@@ -22,11 +24,11 @@
 #===============================================================================
 
 MAX_STEPS=500
-BATCH_SIZE=4                         # Per GPU batch size
-SEQ_LEN=1024
-# Total batch: 4 * 8 = 32
-# Tokens per step: 32 * 1024 = 32K
-# Total tokens: 32K * 500 = 16M
+BATCH_SIZE=64                        # Per GPU batch size (total 512 = 64 × 8 GPUs)
+SEQ_LEN=4096
+# Total batch: 64 * 8 = 512
+# Tokens per step: 512 * 4096 = 2.1M
+# Total tokens: 2.1M * 500 = ~1B tokens
 LR=1e-5
 LOG_INTERVAL=10
 MODEL_NAME="allenai/OLMo-1B"
