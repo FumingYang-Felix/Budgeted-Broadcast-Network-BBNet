@@ -1,9 +1,9 @@
 #!/bin/bash
 #===============================================================================
 # OLMo Dense Baseline - 8 GPU (2 nodes × 4 GPUs) - LARGE SCALE
-# batch=512 (total), seq=4096, 500 steps
-# Tokens per step: 512 × 4096 = 2.1M
-# Total tokens: 2.1M × 500 = ~1B tokens
+# batch=512/GPU, seq=4096, 500 steps
+# Tokens per step: 4096 × 4096 = 16.7M
+# Total tokens: 16.7M × 500 = ~8.4B tokens
 # BB_ENABLE=0 (no pruning)
 #===============================================================================
 
@@ -24,11 +24,11 @@
 #===============================================================================
 
 MAX_STEPS=500
-BATCH_SIZE=64                        # Per GPU batch size (total 512 = 64 × 8 GPUs)
+BATCH_SIZE=512                       # Per GPU batch size
 SEQ_LEN=4096
-# Total batch: 64 * 8 = 512
-# Tokens per step: 512 * 4096 = 2.1M
-# Total tokens: 2.1M * 500 = ~1B tokens
+# Total batch: 512 * 8 = 4096
+# Tokens per step: 4096 * 4096 = 16.7M
+# Total tokens: 16.7M * 500 = ~8.4B tokens
 LR=1e-5
 LOG_INTERVAL=10
 MODEL_NAME="allenai/OLMo-1B"
